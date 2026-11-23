@@ -1,0 +1,379 @@
+npm create vite@latest ecommerce-capstone -- --template react
+cd ecommerce-capstone
+npm install
+npm install react-router-dom
+npm run dev
+src/
+├── components/
+│   ├── Navbar.jsx
+│   └── ProductCard.jsx
+├── pages/
+│   ├── Home.jsx
+│   ├── Products.jsx
+│   └── About.jsx
+├── App.jsx
+├── main.jsx
+└── style.css
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./style.css";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import About from "./pages/About";
+
+function App() {
+  return (
+    <>
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;
+import { Link } from "react-router-dom";
+
+function Navbar() {
+  return (
+    <nav className="navbar">
+      <h2>ShopEase</h2>
+
+      <div className="nav-links">
+        <Link to="/">Home</Link>
+        <Link to="/products">Products</Link>
+        <Link to="/about">About</Link>
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;
+function ProductCard({ product }) {
+  return (
+    <div className="product-card">
+      <img src={product.image} alt={product.name} />
+
+      <h3>{product.name}</h3>
+      <p>{product.category}</p>
+
+      <h4>₹{product.price}</h4>
+
+      <button onClick={() => alert("Product added to cart!")}>
+        Add to Cart
+      </button>
+    </div>
+  );
+}
+
+export default ProductCard;
+import { Link } from "react-router-dom";
+
+function Home() {
+  return (
+    <section className="hero">
+      <div>
+        <h1>Welcome to ShopEase</h1>
+
+        <p>
+          Discover amazing products at affordable prices.
+          Shop smarter and find your favorite products.
+        </p>
+
+        <Link to="/products">
+          <button>Explore Products</button>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+export default Home;
+import { useState } from "react";
+import ProductCard from "../components/ProductCard";
+
+const productData = [
+  {
+    id: 1,
+    name: "Wireless Headphones",
+    category: "Electronics",
+    price: 1499,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500"
+  },
+  {
+    id: 2,
+    name: "Smart Watch",
+    category: "Electronics",
+    price: 2499,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500"
+  },
+  {
+    id: 3,
+    name: "Running Shoes",
+    category: "Fashion",
+    price: 1999,
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500"
+  },
+  {
+    id: 4,
+    name: "Backpack",
+    category: "Accessories",
+    price: 999,
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500"
+  },
+  {
+    id: 5,
+    name: "Keyboard",
+    category: "Electronics",
+    price: 1299,
+    image: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=500"
+  },
+  {
+    id: 6,
+    name: "Sunglasses",
+    category: "Fashion",
+    price: 799,
+    image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500"
+  }
+];
+
+function Products() {
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+
+  const filteredProducts = productData.filter((product) => {
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesCategory =
+      category === "All" || product.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  return (
+    <section className="products-section">
+      <h1>Our Products</h1>
+
+      <input
+        type="text"
+        placeholder="Search products..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      >
+        <option value="All">All Categories</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Fashion">Fashion</option>
+        <option value="Accessories">Accessories</option>
+      </select>
+
+      <div className="product-grid">
+        {filteredProducts.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+
+      {filteredProducts.length === 0 && (
+        <p>No products found.</p>
+      )}
+    </section>
+  );
+}
+
+export default Products;
+function About() {
+  return (
+    <section className="about">
+      <h1>About ShopEase</h1>
+
+      <p>
+        ShopEase is an online shopping platform designed to
+        provide customers with a simple and convenient shopping
+        experience.
+      </p>
+
+      <p>
+        Our website offers a variety of products, easy navigation,
+        product searching and category filtering.
+      </p>
+    </section>
+  );
+}
+
+export default About;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  color: #222;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 8%;
+  background: #172554;
+  color: white;
+}
+
+.navbar h2 {
+  color: #60a5fa;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-links a:hover {
+  color: #60a5fa;
+}
+
+.hero {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+}
+
+.hero h1 {
+  font-size: 45px;
+  margin-bottom: 20px;
+  color: #172554;
+}
+
+.hero p {
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+.products-section {
+  padding: 40px 8%;
+  text-align: center;
+}
+
+.products-section h1 {
+  margin-bottom: 25px;
+}
+
+input,
+select {
+  padding: 12px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.product-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-card h3 {
+  margin: 15px 0 8px;
+}
+
+.product-card p {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.product-card h4 {
+  margin-bottom: 15px;
+  color: #2563eb;
+}
+
+.about {
+  padding: 60px 10%;
+  text-align: center;
+}
+
+.about h1 {
+  margin-bottom: 25px;
+  color: #172554;
+}
+
+.about p {
+  margin: 15px auto;
+  max-width: 700px;
+  line-height: 1.8;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .nav-links {
+    gap: 15px;
+  }
+
+  .hero h1 {
+    font-size: 30px;
+  }
+}
